@@ -19,7 +19,7 @@ if(file.exists("03_negexp.R"))        source("03_negexp.R")
 
 ## Download NDVI data
 URL = "https://raw.githubusercontent.com/jslingsby/BIO3019S_Ecoforecasting/master/data/modisdata.csv"
-dat <- download.NDVI(URL)
+dat <- download.NDVI("https://raw.githubusercontent.com/jslingsby/BIO3019S_Ecoforecasting/master/data/modisdata.csv")
 
 # Convert "calendar_date" to postfire age in days since fire - assuming the first date in the times eries is the time of the fire 
 dat$age <- (as.numeric(dat$calendar_date) - min(as.numeric(dat$calendar_date), na.rm = T))/365.25
@@ -32,7 +32,7 @@ plot.NDVI(dat)
 
 Q1: This plot suggests that Fynbos greenness (NDVI) as observed from satellite saturates with time since fire. Why do you think it saturates rather than increasing linearly with time?
 
->*Answer 1:*
+>*Answer 1: It doesn't increase linearly with time because as time passes, the environmental conditions fluctuate and the differnt fynbos species are responding differently to those fluctations.
 
 <br>
 
@@ -99,7 +99,8 @@ Lots more parameters...
 
 Q2: How do the estimates for the common parameters compare?
 
->*Answer 2:*
+>*Answer 2: For both alpha and lambda their effects (parameter estimates) decreased when we added more paramters to the model. The effect of gamma increased. This could be because of some form of collinearity between the gamma parameter and another parameter such that when those other parameters are added, gamma has a larger effect.
+
 
 <br>
 
@@ -117,11 +118,11 @@ anova(fit_negexp, fit_negexpS)
 
 Q3: Which model is better?
 
->*Answer 3:*
+>*Answer 3: According to the Residual sum of squares presented by anova, model 2(the full model) is better. 
 
 Q4: How many degrees of freedom are there in this ANOVA and why (i.e. what are they)?
 
->*Answer 4:*
+>*Answer 4: There are 135 degrees of freedom for model 1 since we have 138 data points and we estimated 3 parameters (138-5). Model 2 has 133 degrees of freedom because 5 parameters are being estimated in that model (138-5).
 
 <br>
 
@@ -214,7 +215,7 @@ AIC_simple - AIC_full
 
 Q5: Is there a preferred model and if so, which one?
 
->*Answer 5:*
+>*Answer 5: The full model is the preferred model. It has a much lower AIC than that of the simple model and the difference between the models' AICs is way more than 3 indicating a significant difference. The full model is doing a better job at explaining the pattern in the data.
 
 <br>
 
@@ -232,6 +233,7 @@ You'll notice that these are completely different to the AICs for the MLE models
 
 Q6: Why is it not okay to compare the AIC of these NLS models with the AIC of the MLE models? Hint: type `?AIC` into the R console and do some reading.
 
->*Answer 6:*
+>*Answer 6: AIC requires the fitted object ie. the model to have a loglik method for extracting its log-likelihood. If it doesn't, the AIC for that model can be obtained but cannot be compared to that of models whose log-likelihood can be extracted. NLS does not have this method and MLE does thus their AICs cannot be compared.
 
 <br>
+
